@@ -13,9 +13,10 @@ class AddController extends GetxController {
   double month_sum = 0;
   double today_sum = 0;
   add_transaction() {
-    expenses.add(ExpenseModel(
+    expenses.insert(0,ExpenseModel(
         item: item, category: category, amount: price, time: DateTime.now()));
     transactions = expenses;
+    
     update();
   }
   monthly_sum() {
