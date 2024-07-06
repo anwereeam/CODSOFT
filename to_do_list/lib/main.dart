@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:personal_expense_tracker/view/add_transaction.dart';
-import 'view/bottom_bar.dart';
+import 'package:to_do_list/view/add_task.dart';
+import 'view/bootom_bar.dart';
 import 'package:get/get.dart';
-
-import 'view/home_screen.dart';
 void main() {
   runApp(const MyApp());
 }
@@ -21,7 +19,6 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       getPages: [
-        GetPage(name: '/home', page :()=>HomeScreen()),
         GetPage(name: '/bottom', page :()=>BottomBar()),
         GetPage(name: '/add', page :()=>Add()),
       ],
