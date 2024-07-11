@@ -5,9 +5,6 @@ import 'package:get/get.dart';
 import 'package:recipeapp/control/recipe_control.dart';
 
 class RecipeList extends StatelessWidget {
-  //const RecipeList({super.key});
-  //Recipe controller=Get.put(Recipe());
-  //Get.lazyPut(() => ingredints());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,7 +43,6 @@ class RecipeList extends StatelessWidget {
                                       const Color.fromARGB(92, 104, 58, 183),
                                   onTap: () async {
                                     controller.index = index;
-                                    //controller.onReady();
                                     controller.getingerd(controller.recipedata[index].id.toString());
                                     Get.toNamed('/ingred');
                                   },
