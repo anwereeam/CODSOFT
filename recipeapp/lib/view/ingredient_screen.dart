@@ -7,14 +7,13 @@ import '../control/recipe_control.dart';
 
 class MyIngred extends StatelessWidget {
   Recipe controller = Get.find();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+          title: Text('${controller.recipedata[controller.index].title}')),
       body: Obx(
         () {
-          //print(controller.i);
-          //print(controller.ingradientdata.first.name);
           return controller.loadData1 == true.obs
               ? Center(
                   child: CircularProgressIndicator(
@@ -28,11 +27,8 @@ class MyIngred extends StatelessWidget {
                     ))
                   : ListView(
                       children: [
-                        AppBar(
-                            title: Text(
-                                '${controller.recipedata[controller.index].title}')),
                         ClipRRect(
-                          borderRadius: BorderRadius.circular(25),
+                          borderRadius: BorderRadius.circular(15),
                           child: Image(
                               errorBuilder: (context, error, stackTrace) {
                                 return Text('image not found');
@@ -43,40 +39,34 @@ class MyIngred extends StatelessWidget {
                               width: double.infinity,
                               fit: BoxFit.cover),
                         ),
-                        SizedBox(
-                          height: 30,
-                        ),
+                        SizedBox(height: 15,),
                         Padding(
-                          padding: const EdgeInsets.all(15),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: List.generate(
-                              controller.ingradientdata.length,
-                              (index) {
-                                return SingleChildScrollView(
-                                  
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: [
-                                      Center(
-                                        child: Text(
-                                          '${controller.ingradientdata[index].amount.metric.value}  ${controller.ingradientdata[index].amount.metric.unit}  ${controller.ingradientdata[index].name}',
-                                          style: TextStyle(fontSize: 16),
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        
-                                        child: Divider(
-                                          color:
-                                              Color.fromARGB(255, 79, 67, 67),
-                                          thickness: .5,
-                                        ),
-                                      ),
-                                    ],
+                          padding: const EdgeInsets.symmetric(horizontal: 15),
+                          child: Text('Ingredients (${controller.ingradientdata.length})',style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),
+                        ),
+                        SizedBox(height: 15,),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: List.generate(
+                            controller.ingradientdata.length,
+                            (index) {
+                              return Card(
+                                surfaceTintColor:
+                                    Color.fromARGB(255, 255, 255, 255),
+                                child: ListTile(
+                                  leading: Container(
+                                      width: 50,
+                                      decoration: BoxDecoration(
+                                          shape: BoxShape.circle),
+                                      child: Icon(Icons.restaurant_menu)),
+                                  title: Text(
+                                    '${controller.ingradientdata[index].name}',
+                                    style: TextStyle(fontSize: 16,fontWeight: FontWeight.w600),
                                   ),
-                                );
-                              },
-                            ),
+                                  trailing: Text('${controller.ingradientdata[index].amount.metric.value} ${controller.ingradientdata[index].amount.metric.unit}'),
+                                ),
+                              );
+                            },
                           ),
                         ),
                       ],

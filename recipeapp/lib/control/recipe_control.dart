@@ -7,9 +7,6 @@ import 'package:recipeapp/model/recipe_model.dart';
 
 import '../model/ingredients.dart';
 
-//import '../model/api_call.dart';
-
-//import 'package:flutter/material.dart';
 class Recipe extends getx.GetxController {
   RxList recipedata = [].obs;
   RxList ingradientdata = [].obs;
@@ -19,18 +16,14 @@ class Recipe extends getx.GetxController {
   static const String apiKey = 'd8d9a74b8f414a8492b1926d838c3523';
   static const String baseUrl =
       'https://api.spoonacular.com/recipes/complexSearch';
-  
+
   Dio dio = Dio();
   @override
   void onInit() async {
     loadData.value = true;
     try {
       Response response = await dio.get(baseUrl,
-          queryParameters: {
-            'number': 200,
-            'query': 'meat',
-            'apiKey': apiKey
-          },
+          queryParameters: {'number': 200, 'query': 'meat', 'apiKey': apiKey},
           options: Options(headers: {'Content-Type': 'application/json'}));
       if (response.statusCode == 200) {
         //final List<dynamic>? data = response.data;
@@ -38,57 +31,47 @@ class Recipe extends getx.GetxController {
         final List<dynamic> recipes = data['results'];
         final medicines =
             recipes.map((json) => Results.fromJson(json)).toList();
-        recipedata=medicines.obs;
+        recipedata = medicines.obs;
       }
     } catch (e) {
       error = e.toString();
     } finally {
-      dio.close();
+      //dio.close();
     }
 
     loadData.value = false;
     update();
     super.onInit();
   }
+  //Dio dio1 = Dio();
   late int index;
-  
-  set_i( x)async{
-      //recipedata[index].id.toString();
-      await get_ingred(x);
-      //refresh();
-  }
-  
-  //final String fullUrl = '$ingred/$i/ingredientWidget.json';
-  Dio dio1 = Dio();
-/*-------------------get ingredients -----------------*/ 
-  get_ingred(x) async {
-    String ingred =
-      'https://api.spoonacular.com/recipes/$x/ingredientWidget.json';
+  Future<void> getingerd(x)async {
+    ingradientdata.clear();
+  String ingred =
+        'https://api.spoonacular.com/recipes/$x/ingredientWidget.json';
     loadData1.value = true;
     try {
-      Response response = await dio1.get(ingred,
-          queryParameters: {
-            'apiKey': apiKey
-          },
-          
+      Response response = await dio.get(ingred,
+          queryParameters: {'apiKey': apiKey},
           options: Options(headers: {'Content-Type': 'application/json'}));
       if (response.statusCode == 200) {
-        //final List<dynamic>? data = response.data;
         final Map<String, dynamic> data = response.data;
         final List<dynamic> recipes = data['ingredients'];
         final medicines =
             recipes.map((json) => Ingredients.fromJson(json)).toList();
-        ingradientdata=medicines.obs;
+        ingradientdata = medicines.obs;
+        ingradientdata.refresh();
       }
     } catch (e) {
       error = e.toString();
     } finally {
-      dio1.close();
+      //dio1.close();
     }
     loadData1.value = false;
     update();
-    super.onInit();
   }
-  
+
+
+/*-------------------get ingredients -----------------*/
 }
 
