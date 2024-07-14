@@ -1,17 +1,33 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:recipeapp/view/home.dart';
+import 'package:recipeapp/view/login.dart';
+import 'package:recipeapp/view/register.dart';
 
 import 'view/ingredient_screen.dart';
 
-void main() {
-  runApp(const MyApp());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: FirebaseOptions(
+      apiKey: ' AIzaSyAwE8hSd9uoUscB7KXOhngR1UymxjdDdjU ', appId: '1:74066100390:android:f23f4cb122dc0bd4acb467',
+      messagingSenderId: '74066100390',
+      projectId: 'recipe-app-66fca')
+  );
+  runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class MyApp extends StatefulWidget {
+  MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -25,8 +41,11 @@ class MyApp extends StatelessWidget {
       getPages:[
         GetPage(name: '/home', page :()=>RecipeList()),
         GetPage(name: '/ingred', page :()=>MyIngred()),
+        GetPage(name: '/login', page :()=>LoginScreeen()),
+        GetPage(name: '/signup', page :()=>SignUP()),
+
       ],
-      initialRoute: '/home',
+      initialRoute: '/login',
     );
   }
 }

@@ -42,7 +42,13 @@ class MyIngred extends StatelessWidget {
                         SizedBox(height: 15,),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 15),
-                          child: Text('Ingredients (${controller.ingradientdata.length})',style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text('Ingredients (${controller.ingradientdata.length})',style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold,color: Color.fromARGB(255, 69, 69, 69)),),
+                              MaterialButton(onPressed: (){},color: Color.fromARGB(255, 67, 146, 125),minWidth: 150, child: Text('Start Cooking',style: TextStyle(color: Colors.white,fontSize:18,fontWeight: FontWeight.bold ),),)
+                            ],
+                          ),
                         ),
                         SizedBox(height: 15,),
                         Column(
@@ -61,9 +67,11 @@ class MyIngred extends StatelessWidget {
                                       child: Icon(Icons.restaurant_menu)),
                                   title: Text(
                                     '${controller.ingradientdata[index].name}',
-                                    style: TextStyle(fontSize: 16,fontWeight: FontWeight.w600),
+                                    style: TextStyle(fontSize: 16,fontWeight: FontWeight.w500,color: Color.fromARGB(255, 69, 69, 69)),
                                   ),
-                                  trailing: Text('${controller.ingradientdata[index].amount.metric.value} ${controller.ingradientdata[index].amount.metric.unit}'),
+                                  trailing: Text('${controller.ingradientdata[index].amount.metric.value} ${controller.ingradientdata[index].amount.metric.unit}',
+                                  style: TextStyle(fontSize: 16,fontWeight: FontWeight.w500,color: Color.fromARGB(255, 69, 69, 69)),
+                                  ),
                                 ),
                               );
                             },
