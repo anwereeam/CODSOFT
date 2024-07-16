@@ -3,6 +3,9 @@
 import 'package:dio/dio.dart';
 import 'package:get/get.dart' as getx;
 import 'package:get/get_rx/get_rx.dart';
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
+import 'package:get/state_manager.dart';
+import 'package:recipeapp/model/instruction.dart' as instruc;
 import 'package:recipeapp/model/recipe_model.dart';
 
 import '../model/ingredients.dart';
@@ -10,6 +13,8 @@ import '../model/ingredients.dart';
 class Recipe extends getx.GetxController {
   RxList recipedata = [].obs;
   RxList ingradientdata = [].obs;
+  late RxList<instruc.Instructions> instrucdata;
+  RxBool instruction_condition=false.obs;
   String error = 'Develpment error';
   var loadData = false.obs;
   var loadData1 = false.obs;
@@ -46,7 +51,7 @@ class Recipe extends getx.GetxController {
   //Dio dio1 = Dio();
   late int index;
   Future<void> getingerd(x)async {
-    ingradientdata.clear();
+    //ingradientdata.clear();
   String ingred =
         'https://api.spoonacular.com/recipes/$x/ingredientWidget.json';
     loadData1.value = true;
@@ -61,6 +66,39 @@ class Recipe extends getx.GetxController {
             recipes.map((json) => Ingredients.fromJson(json)).toList();
         ingradientdata = medicines.obs;
         ingradientdata.refresh();
+        //instruction_condition=false;
+      }
+    } catch (e) {
+      error = e.toString();
+    } finally {
+      //dio1.close();
+    }
+    
+    update();
+  }
+
+
+/*-------------------get steps -----------------*/
+Future<void> getsteps(x)async {
+    //ingradientdata.clear();
+  String ingred =
+        'https://api.spoonacular.com/recipes/$x/analyzedInstructions';
+    
+    try {
+      Response response = await dio.get(ingred,
+          queryParameters: {'apiKey': apiKey},
+          options: Options(headers: {'Content-Type': 'application/json'}));
+      if (response.statusCode == 200) {
+        final List<dynamic> data = response.data;
+        //final recipes = data[0]['steps'];
+        final medicines =
+            data.map((json) => instruc.Instructions.fromJson(json)).toList();
+        //print(medicines);
+        instrucdata = medicines.obs ;
+        //instrucdata=instrucdata[0];
+        instrucdata.refresh();
+        //print(instrucdata);
+
       }
     } catch (e) {
       error = e.toString();
@@ -70,8 +108,14 @@ class Recipe extends getx.GetxController {
     loadData1.value = false;
     update();
   }
-
-
-/*-------------------get ingredients -----------------*/
+  void showingred(){
+    instruction_condition=false.obs;
+    update();
+  }
+  void showdetails(){
+    instruction_condition=true.obs;
+    update();
+  }
+  
 }
 
