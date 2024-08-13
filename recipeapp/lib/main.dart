@@ -4,6 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:recipeapp/control/signup_control.dart';
 import 'package:recipeapp/view/home.dart';
 import 'package:recipeapp/view/login.dart';
 import 'package:recipeapp/view/register.dart';
@@ -17,7 +19,7 @@ Future<void> main() async {
       apiKey: ' AIzaSyAwE8hSd9uoUscB7KXOhngR1UymxjdDdjU ', appId: '1:74066100390:android:f23f4cb122dc0bd4acb467',
       messagingSenderId: '74066100390',
       projectId: 'recipe-app-66fca')
-  );
+  ).then((value) => Get.put(AuthController()));
   runApp(MyApp());
 }
 
@@ -30,9 +32,14 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   // This widget is the root of your application.
-  final _auth=FirebaseAuth.instance;
+  //final _auth=FirebaseAuth.instance;
+  //GoogleSignIn  googleUser =GoogleSignIn();
+                             //.signOut();
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context){
+    //googleUser.disconnect();
+    //_auth.signOut();
+    //print(_auth);
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'recipe app',
@@ -47,7 +54,9 @@ class _MyAppState extends State<MyApp> {
         GetPage(name: '/signup', page :()=>SignUP()),
 
       ],
-      initialRoute:_auth.currentUser!=null&& _auth.currentUser!.emailVerified?'/home':'/login',
+      home: LoginScreeen(),
+      //initialRoute:_auth.currentUser!=null&& _auth.currentUser!.emailVerified?'/home':'/login',
+      
     );
   }
 }

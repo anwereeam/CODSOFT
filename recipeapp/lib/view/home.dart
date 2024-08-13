@@ -1,11 +1,14 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:recipeapp/control/recipe_control.dart';
 
+import '../control/signup_control.dart';
+
 class RecipeList extends StatelessWidget {
-  Recipe controller=Get.put(Recipe(),permanent: true);
+  Recipe controller=Get.put(Recipe());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -14,10 +17,10 @@ class RecipeList extends StatelessWidget {
         padding: const EdgeInsets.only(top: 10,left: 15,right: 15),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: const [
+          children:  [
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+              children: const [
                 Text(
                   'Hello,',
                   style: TextStyle(
@@ -34,7 +37,10 @@ class RecipeList extends StatelessWidget {
             ),
             CircleAvatar(
               backgroundImage: AssetImage('images/recipe_login.png'),
-            )
+            ),
+            IconButton(onPressed: ()async{
+             await AuthController.instance.logout();
+            }, icon: Icon(Icons.logout_rounded))
           ],
         ),
       ),
@@ -62,7 +68,8 @@ class RecipeList extends StatelessWidget {
       GetX<Recipe>(
         //init: Recipe(),
         builder: (controller) {
-          return controller.loadData == true.obs
+          return
+          controller.loadData == true.obs
               ? Center(
                   child: CircularProgressIndicator(
                   color: Colors.deepPurple[80],
@@ -89,9 +96,10 @@ class RecipeList extends StatelessWidget {
                                   controller.getingerd(controller
                                       .recipedata[index].id
                                       .toString());
-                                  //controller.getsteps(controller.index);
+                                  //controller.getsteps(controller.index)
                                   await controller.getsteps(controller
                                       .recipedata[controller.index].id);
+                                  controller.fav_cond=await controller.isItemInFavorites(controller.recipedata[controller.index].id.toString()) ;
                                   controller.showingred();
                                   Get.toNamed('/ingred');
                                 },
@@ -133,34 +141,7 @@ class RecipeList extends StatelessWidget {
                                       ),
                                     ),
                                   ),
-                                  Container(
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(25),
-                                          gradient: LinearGradient(
-                                            colors: [
-                                              Colors.black.withOpacity(0),
-                                              Colors.black.withOpacity(.1)
-                                            ],
-                                            begin: Alignment.centerRight,
-                                            end: Alignment.topRight,
-                                          )),
-                                      padding: EdgeInsets.symmetric(
-                                          vertical: 10, horizontal: 10),
-                                      height: 250,
-                                      alignment: Alignment.topRight,
-                                      child: FloatingActionButton(
-                                        mini: true,
-                                        shape: CircleBorder(),
-                                        onPressed: () {},
-                                        child: Icon(
-                                            Icons.favorite_outline_rounded),
-                                        foregroundColor:
-                                            Color.fromARGB(255, 67, 146, 125),
-                                        //iconSize: 30,
-                                        backgroundColor: Colors.white,
-                                      )),
-                                ]),
+                                      ]),
                               ),
                             ],
                           ),

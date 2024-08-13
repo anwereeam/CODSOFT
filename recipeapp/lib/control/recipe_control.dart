@@ -1,20 +1,22 @@
 // ignore_for_file: non_constant_identifier_names
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart' as getx;
-import 'package:get/get_rx/get_rx.dart';
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
+
 import 'package:get/state_manager.dart';
 import 'package:recipeapp/model/instruction.dart' as instruc;
 import 'package:recipeapp/model/recipe_model.dart';
-
+import 'package:connectivity_plus/connectivity_plus.dart';
 import '../model/ingredients.dart';
 
 class Recipe extends getx.GetxController {
+  RxBool fav_cond = false.obs;
   RxList recipedata = [].obs;
   RxList ingradientdata = [].obs;
   late RxList<instruc.Instructions> instrucdata;
-  RxBool instruction_condition=false.obs;
+  RxBool instruction_condition = false.obs;
   String error = 'Develpment error';
   var loadData = false.obs;
   var loadData1 = false.obs;
@@ -23,8 +25,15 @@ class Recipe extends getx.GetxController {
       'https://api.spoonacular.com/recipes/complexSearch';
 
   Dio dio = Dio();
+  //final Connectivity _connectivity = Connectivity();
   @override
-  void onInit() async {
+  void onReady() {
+    super.onReady();
+    
+    _makeRequest();
+  }
+
+  Future<void> _makeRequest() async {
     loadData.value = true;
     try {
       Response response = await dio.get(baseUrl,
@@ -38,21 +47,24 @@ class Recipe extends getx.GetxController {
             recipes.map((json) => Results.fromJson(json)).toList();
         recipedata = medicines.obs;
       }
-    } catch (e) {
-      error = e.toString();
+    } on DioException catch (e) {
+      if (e.type == DioExceptionType.connectionError) {
+        error = 'Internet connection error';
+      } else {
+        error = e.message.toString();
+      }
     } finally {
       //dio.close();
     }
 
     loadData.value = false;
-    update();
-    super.onInit();
   }
+
   //Dio dio1 = Dio();
   late int index;
-  Future<void> getingerd(x)async {
+  Future<void> getingerd(x) async {
     //ingradientdata.clear();
-  String ingred =
+    String ingred =
         'https://api.spoonacular.com/recipes/$x/ingredientWidget.json';
     loadData1.value = true;
     try {
@@ -73,17 +85,16 @@ class Recipe extends getx.GetxController {
     } finally {
       //dio1.close();
     }
-    
+
     update();
   }
 
-
 /*-------------------get steps -----------------*/
-Future<void> getsteps(x)async {
+  Future<void> getsteps(x) async {
     //ingradientdata.clear();
-  String ingred =
+    String ingred =
         'https://api.spoonacular.com/recipes/$x/analyzedInstructions';
-    
+
     try {
       Response response = await dio.get(ingred,
           queryParameters: {'apiKey': apiKey},
@@ -94,11 +105,10 @@ Future<void> getsteps(x)async {
         final medicines =
             data.map((json) => instruc.Instructions.fromJson(json)).toList();
         //print(medicines);
-        instrucdata = medicines.obs ;
+        instrucdata = medicines.obs;
         //instrucdata=instrucdata[0];
         instrucdata.refresh();
         //print(instrucdata);
-
       }
     } catch (e) {
       error = e.toString();
@@ -108,14 +118,64 @@ Future<void> getsteps(x)async {
     loadData1.value = false;
     update();
   }
-  void showingred(){
-    instruction_condition=false.obs;
-    update();
-  }
-  void showdetails(){
-    instruction_condition=true.obs;
-    update();
-  }
-  
-}
 
+  void showingred() {
+    instruction_condition = false.obs;
+    update();
+  }
+
+  void showdetails() {
+    instruction_condition = true.obs;
+    update();
+  }
+
+  /*check if the element is favourite or not */
+  Future<RxBool> isItemInFavorites(String itemId) async {
+    final user = FirebaseAuth.instance.currentUser;
+    final userId = user?.uid;
+
+    if (userId != null) {
+      final docRef = FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .collection('favorites')
+          .doc(itemId);
+
+      final docSnapshot = await docRef.get();
+      return docSnapshot.exists.obs; // Returns true if the document exists
+    }
+
+    return false.obs; // If the user is not logged in or something else fails
+  }
+
+  /*add item to favourite using firebase*/
+  Future<void> addToFavorites(
+      String itemId, Map<String, dynamic> itemDetails) async {
+    final user = FirebaseAuth.instance.currentUser;
+    final userId = user?.uid;
+
+    if (userId != null) {
+      final docRef = FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .collection('favorites')
+          .doc(itemId);
+      await docRef.set(itemDetails);
+    }
+  }
+  /*remove item from favourite using firebase*/
+  Future<void> removeFromFavorites(String itemId) async {
+  final user = FirebaseAuth.instance.currentUser;
+  final userId = user?.uid;
+
+  if (userId != null) {
+    final docRef = FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .collection('favorites')
+        .doc(itemId);
+
+    await docRef.delete();
+  }
+}
+}

@@ -29,7 +29,9 @@ class MyIngred extends StatelessWidget {
                         Row(
                           children: [
                             IconButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  Get.back();
+                                },
                                 icon: Icon(Icons.arrow_back_rounded)),
                             SizedBox(
                               width: MediaQuery.sizeOf(context).width * .3,
