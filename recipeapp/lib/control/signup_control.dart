@@ -22,7 +22,7 @@ class AuthController extends GetxController {
     if (user == null) {
       Get.offAllNamed('/login');
     } else if (user.emailVerified) {
-      Get.offAllNamed('/home');
+      Get.offAllNamed('/BottomBar');
     } else if (!user.emailVerified) {
       Get.showSnackbar(const GetSnackBar(
           duration: const Duration(seconds: 3),
@@ -66,6 +66,26 @@ class AuthController extends GetxController {
           )));
     }
   }
+  resetpass(email)async{
+    try {
+      await auth.sendPasswordResetEmail(email: email);
+      Get.showSnackbar(const GetSnackBar(
+          duration: Duration(seconds: 3),
+          messageText: Text(
+            'check your email to change your password',
+            style: TextStyle(color: Color.fromARGB(255, 254, 218, 111)),
+          )));
+      //auth.currentUser!.sendEmailVerification();
+    } on FirebaseAuthException catch (e) {
+      Get.showSnackbar(GetSnackBar(
+          duration: const Duration(seconds: 3),
+          messageText: Text(
+            e.code.toString(),
+            style: const TextStyle(color: Color.fromARGB(255, 254, 218, 111)),
+          )));
+    }
+  }
+
 
   logout() async {
     try {

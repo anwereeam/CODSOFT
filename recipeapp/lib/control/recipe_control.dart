@@ -8,7 +8,6 @@ import 'package:get/get.dart' as getx;
 import 'package:get/state_manager.dart';
 import 'package:recipeapp/model/instruction.dart' as instruc;
 import 'package:recipeapp/model/recipe_model.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
 import '../model/ingredients.dart';
 
 class Recipe extends getx.GetxController {
@@ -29,15 +28,16 @@ class Recipe extends getx.GetxController {
   @override
   void onReady() {
     super.onReady();
-    
-    _makeRequest();
+    makeRequest();
   }
 
-  Future<void> _makeRequest() async {
+  Future<void> makeRequest({String type='soup',String query=''}) async {
     loadData.value = true;
     try {
-      Response response = await dio.get(baseUrl,
-          queryParameters: {'number': 200, 'query': 'meat', 'apiKey': apiKey},
+      Response response = await dio.get(baseUrl, 
+          queryParameters:query==''?
+            {'number': 200, 'type': type,'apiKey': apiKey}:
+            {'number': 200,'query':query,'apiKey': apiKey},
           options: Options(headers: {'Content-Type': 'application/json'}));
       if (response.statusCode == 200) {
         //final List<dynamic>? data = response.data;
@@ -53,10 +53,7 @@ class Recipe extends getx.GetxController {
       } else {
         error = e.message.toString();
       }
-    } finally {
-      //dio.close();
     }
-
     loadData.value = false;
   }
 
@@ -82,10 +79,7 @@ class Recipe extends getx.GetxController {
       }
     } catch (e) {
       error = e.toString();
-    } finally {
-      //dio1.close();
-    }
-
+    } 
     update();
   }
 
@@ -112,9 +106,7 @@ class Recipe extends getx.GetxController {
       }
     } catch (e) {
       error = e.toString();
-    } finally {
-      //dio1.close();
-    }
+    } 
     loadData1.value = false;
     update();
   }

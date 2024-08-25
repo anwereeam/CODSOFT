@@ -10,6 +10,7 @@ import 'package:recipeapp/view/home.dart';
 import 'package:recipeapp/view/login.dart';
 import 'package:recipeapp/view/register.dart';
 
+import 'view/bootom_bar.dart';
 import 'view/ingredient_screen.dart';
 
 Future<void> main() async {
@@ -52,6 +53,7 @@ class _MyAppState extends State<MyApp> {
         GetPage(name: '/ingred', page :()=>MyIngred()),
         GetPage(name: '/login', page :()=>LoginScreeen()),
         GetPage(name: '/signup', page :()=>SignUP()),
+        GetPage(name: '/BottomBar', page :()=>BottomBar()),
 
       ],
       home: LoginScreeen(),

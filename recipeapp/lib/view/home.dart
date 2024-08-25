@@ -4,6 +4,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:recipeapp/control/recipe_control.dart';
+import 'package:recipeapp/modules/cusine_type_filter.dart';
 
 import '../control/signup_control.dart';
 
@@ -46,7 +47,11 @@ class RecipeList extends StatelessWidget {
       ),
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 20),
-        child: TextField(  
+        child: TextField( 
+          onSubmitted: (value)async {
+            await controller.makeRequest(query: value);
+            
+          }, 
           decoration: InputDecoration(
             prefixIcon: Icon(Icons.search_rounded),
             prefixIconColor: Color.fromARGB(202, 69, 69, 69) ,
@@ -65,6 +70,7 @@ class RecipeList extends StatelessWidget {
           ),
         ),
       ),
+      CusineType(),
       GetX<Recipe>(
         //init: Recipe(),
         builder: (controller) {
@@ -93,7 +99,7 @@ class RecipeList extends StatelessWidget {
                                     const Color.fromARGB(92, 104, 58, 183),
                                 onTap: () async {
                                   controller.index = index;
-                                  controller.getingerd(controller
+                                  await controller.getingerd(controller
                                       .recipedata[index].id
                                       .toString());
                                   //controller.getsteps(controller.index)

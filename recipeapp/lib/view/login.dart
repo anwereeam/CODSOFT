@@ -45,7 +45,21 @@ class LoginScreeen extends StatelessWidget {
                     Container(
                         alignment: Alignment.topRight,
                         child: TextButton(
-                            onPressed: () {}, child: Text('Forget password'))),
+                            onPressed: () async {
+                              if (email.text == '') {
+                                Get.showSnackbar(const GetSnackBar(
+                                    duration: Duration(seconds: 3),
+                                    messageText: Text(
+                                      'please write your email',
+                                      style: TextStyle(
+                                          color: Color.fromARGB(
+                                              255, 254, 218, 111)),
+                                    )));
+                              } else {
+                                await AuthController.instance.resetpass(email.text);
+                              }
+                            },
+                            child: Text('Forget password'))),
                     MaterialButton(
                       onPressed: () async {
                         await AuthController.instance
