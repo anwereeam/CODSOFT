@@ -14,7 +14,7 @@ class Recipe extends getx.GetxController {
   RxBool fav_cond = false.obs;
   RxList recipedata = [].obs;
   RxList ingradientdata = [].obs;
-  late RxList<instruc.Instructions> instrucdata;
+  RxList instrucdata=[].obs;
   RxBool instruction_condition = false.obs;
   String error = 'Develpment error';
   var loadData = false.obs;
@@ -31,7 +31,7 @@ class Recipe extends getx.GetxController {
     makeRequest();
   }
 
-  Future<void> makeRequest({String type='soup',String query=''}) async {
+  Future<void> makeRequest({String type='main course',String query=''}) async {
     loadData.value = true;
     try {
       Response response = await dio.get(baseUrl, 

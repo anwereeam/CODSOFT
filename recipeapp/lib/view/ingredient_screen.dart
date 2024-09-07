@@ -18,13 +18,13 @@ class MyIngred extends StatelessWidget {
                   child: CircularProgressIndicator(
                   color: Colors.deepPurple[80],
                 ))
-              : controller.ingradientdata.isEmpty
+              : /*controller.ingradientdata.isEmpty
                   ? Center(
                       child: Text(
                       controller.error,
                       style: TextStyle(fontSize: 30),
                     ))
-                  : ListView(
+                  : */ListView(
                       children: [
                         Row(
                           children: [

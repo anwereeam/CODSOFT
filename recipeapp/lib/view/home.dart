@@ -96,7 +96,7 @@ class RecipeList extends StatelessWidget {
                             children: [
                               InkWell(
                                 splashColor:
-                                    const Color.fromARGB(92, 104, 58, 183),
+                                    Color.fromARGB(92, 22, 126, 45),
                                 onTap: () async {
                                   controller.index = index;
                                   await controller.getingerd(controller
